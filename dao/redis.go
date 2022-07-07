@@ -28,3 +28,8 @@ func NewRedisClient() (*redis.Client, error) {
 	}
 	return redisClient, nil
 }
+
+//GetRedisData 读取redis数据
+func GetRedisData(key string) {
+
+}
