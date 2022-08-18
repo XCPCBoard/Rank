@@ -6,6 +6,7 @@ require (
 	github.com/FengZhg/go_tools/errs v0.0.0-20220614094251-7e78038785db
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/go-sql-driver/mysql v1.6.0
 	github.com/sirupsen/logrus v1.8.1
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )

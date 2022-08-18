@@ -14,5 +14,10 @@ func init() {
 	if err != nil {
 		panic(err)
 	}
+	dbClient, err := dao.NewDBClient()
+	if err != nil {
+		panic(err)
+	}
 	dao.RedisClient = redisClient
+	dao.DBClient = dbClient
 }
