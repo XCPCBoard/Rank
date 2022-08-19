@@ -5,6 +5,7 @@ import (
 	"github.com/go-redis/redis/v8"
 	log "github.com/sirupsen/logrus"
 	"rank/config"
+	"strconv"
 )
 
 var RedisClient *redis.Client
@@ -30,6 +31,17 @@ func NewRedisClient() (*redis.Client, error) {
 }
 
 //GetRedisData 读取redis数据
-func GetRedisData(key string) {
-
+func GetRedisData(key string) (int, error) {
+	//读取
+	val, err := RedisClient.Get(context.Background(), key).Result()
+	if err != nil {
+		log.Errorf("read Redis Error:%v", err)
+		return 0, err
+	}
+	//val 类型
+	num, e := strconv.Atoi(val)
+	if e != nil {
+		log.Errorf("read Redis type Error:%v", err)
+	}
+	return num, nil
 }

@@ -2,6 +2,7 @@ module rank
 
 go 1.18
 
+
 require (
 	github.com/FengZhg/go_tools/errs v0.0.0-20220614094251-7e78038785db
 	github.com/gin-gonic/gin v1.8.1
