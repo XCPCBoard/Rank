@@ -1,13 +1,14 @@
 # rank
 ## 1. 基础分
 
-$BaseRating =ProblemScorce*0.5+ratingScorce*0.4+BlogScore*0.1$
+$BaseRating = ProblemScorce\cdot 0.5+ratingScore\cdot0.4+BlogScore\cdot0.1$
 
 $ProblemScorce = PassPloblemSum$
 
-$ratingScorce=(AtcodeRating+CodeforcesRating)*0.1$
+$ratingScorce=(AtcodeRating+CodeforcesRating)\cdot0.1$
 
-$BlogScorce=BlogNum*2$
+$BlogScorce=BlogNum\cdot2$
+
 
 ## 2. Rating 计算
 
@@ -15,7 +16,7 @@ $Rating$ 将以(天\周\月)为单位作为一场比赛，进行迭代计算。
 
 ### 2.1 模块分数
 #### 2.1.1 ProblemScore
-$ProblemScore=easy∗1+basic∗2+advanced∗3+hard∗4+unknown∗2$
+$ProblemScore=easy\cdot1+basic\cdot2+advanced\cdot3+hard∗4+unknown\cdot2$
 #### 2.1.2 ratingScore
 $codeforces ：$
 
@@ -82,13 +83,9 @@ $K$ 暂定为 $32$，实际上 $K$ 将随着用户 $Rating$ 的增加而减小�
 #### 2.3.2 考虑 1 V n
 $R_{A_{new}}=R_A+K \cdot P_A$
 
+[![aMUBR.png](https://s1.328888.xyz/2022/08/31/aMUBR.png)](https://imgloc.com/i/aMUBR)
 
-
-$P_A=\sqrt[x]{\prod^{x}_{R_i<R_A}(S_{Ai}-E_{Ai})}-\sqrt[y]{\prod^{y}_{R_i>R_A}(E_{Ai}-S_{Ai})}$
-
-
-
-由于$(S_{A_i}-E_{A_i})$并不是全为正数，因此通过分别计算对应的值做差为 $P_A$。
+由于 $(S_{A_i}-E_{A_i})$ 并不是全为正数，因此通过分别计算对应的值做差为 $P_A$。
 
 #### 2.3.3  rating 修正调整
 第一次：
