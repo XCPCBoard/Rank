@@ -4,6 +4,9 @@
 
 
 ## 1. 基础分
+
+
+
 $BaseRating =ProblemScorce*0.5+ratingScorce*0.4+BlogScore*0.1$
 
 $ProblemScorce = PassPloblemSum$
@@ -12,8 +15,15 @@ $ratingScorce=(AtcodeRating+CodeforcesRating)*0.1$
 
 $BlogScorce=BlogNum*2$
 
+
+
 ## 2. Rating 计算
+
+
+
 $Rating$ 将以(天\周\月)为单位作为一场比赛，进行迭代计算。
+
+
 
 ### 2.1 模块分数
 #### 2.1.1 ProblemScore
@@ -70,9 +80,9 @@ $E_A=\frac{1}{1+10^{\frac{R_B-R_A}{400}}}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~E_
 
 $E_A+E_B=1$
 
-$S_A=\frac{problemScore_A}{problemScore_A+problemScore_B} \cdot 0.4+\frac{ratingScore_A}{ratingScore_A+ratingScore_B}*0.3+ \\ ~\\~~~~~~~~~~ \frac{blogScore_A}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_A}{AttendanceScore_A+AttendanceScore_B}*0.1$
+$S_A=\frac{problemScore_A}{problemScore_A+problemScore_B} \cdot 0.4+\frac{ratingScore_A}{ratingScore_A+ratingScore_B}*0.3+\frac{blogScore_A}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_A}{AttendanceScore_A+AttendanceScore_B}*0.1$
 
-$S_B=\frac{problemScore_B}{problemScore_A+problemScore_B} \cdot 0.4+\frac{ratingScore_B}{ratingScore_A+ratingScore_B}*0.3+\\~\\~~~~~~~~~~~\frac{blogScore_B}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_B}{AttendanceScore_A+AttendanceScore_B}*0.1$
+$S_B=\frac{problemScore_B}{problemScore_A+problemScore_B} \cdot 0.4+\frac{ratingScore_B}{ratingScore_A+ratingScore_B}*0.3+\frac{blogScore_B}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_B}{AttendanceScore_A+AttendanceScore_B}*0.1$
 
 $S_A+S_B=1$
 
@@ -84,7 +94,11 @@ $K$ 暂定为 $32$，实际上 $K$ 将随着用户 $Rating$ 的增加而减小�
 #### 2.3.2 考虑 1 V n
 $R_{A_{new}}=R_A+K \cdot P_A$
 
+
+
 $P_A=\sqrt[x]{\prod^{x}_{i=排名低于A的用户}(S_{Ai}-E_{Ai})}-\sqrt[y]{\prod^{y}_{i=排名高于A的用户}(E_{Ai}-S_{Ai})}$
+
+
 
 由于$(S_{Ai}-E_{Ai})$并不是全为正数，因此通过分别计算对应的值做差为 $P_A$。
 
@@ -116,4 +130,5 @@ $R_i=R_i+adjust~~~~(i \leq m)$
 
 > 参考
 > https://en.wikipedia.org/wiki/Elo_rating_system
+>
 > https://www.luogu.com.cn/blog/ak-ioi/cf-at-rating
