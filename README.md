@@ -1,11 +1,5 @@
 # rank
-排名统计服务
-
-
-
 ## 1. 基础分
-
-
 
 $BaseRating =ProblemScorce*0.5+ratingScorce*0.4+BlogScore*0.1$
 
@@ -15,15 +9,9 @@ $ratingScorce=(AtcodeRating+CodeforcesRating)*0.1$
 
 $BlogScorce=BlogNum*2$
 
-
-
 ## 2. Rating 计算
 
-
-
 $Rating$ 将以(天\周\月)为单位作为一场比赛，进行迭代计算。
-
-
 
 ### 2.1 模块分数
 #### 2.1.1 ProblemScore
@@ -80,9 +68,9 @@ $E_A=\frac{1}{1+10^{\frac{R_B-R_A}{400}}}~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~E_
 
 $E_A+E_B=1$
 
-$S_A=\frac{problemScore_A}{problemScore_A+problemScore_B} \cdot 0.4+\frac{ratingScore_A}{ratingScore_A+ratingScore_B}*0.3+\frac{blogScore_A}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_A}{AttendanceScore_A+AttendanceScore_B}*0.1$
+$S_A=\frac{problemScore_A}{problemScore_A+problemScore_B} * 0.4+\frac{ratingScore_A}{ratingScore_A+ratingScore_B}*0.3+\frac{blogScore_A}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_A}{AttendanceScore_A+AttendanceScore_B}*0.1$
 
-$S_B=\frac{problemScore_B}{problemScore_A+problemScore_B} \cdot 0.4+\frac{ratingScore_B}{ratingScore_A+ratingScore_B}*0.3+\frac{blogScore_B}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_B}{AttendanceScore_A+AttendanceScore_B}*0.1$
+$S_B=\frac{problemScore_B}{problemScore_A+problemScore_B} * 0.4+\frac{ratingScore_B}{ratingScore_A+ratingScore_B}*0.3+\frac{blogScore_B}{blogScore_A+blogScore_B}*0.2+\frac{AttendanceScore_B}{AttendanceScore_A+AttendanceScore_B}*0.1$
 
 $S_A+S_B=1$
 
@@ -96,11 +84,11 @@ $R_{A_{new}}=R_A+K \cdot P_A$
 
 
 
-$P_A=\sqrt[x]{\prod^{x}_{i=排名低于A的用户}(S_{Ai}-E_{Ai})}-\sqrt[y]{\prod^{y}_{i=排名高于A的用户}(E_{Ai}-S_{Ai})}$
+$P_A=\sqrt[x]{\prod^{x}_{R_i<R_A}(S_{Ai}-E_{Ai})}-\sqrt[y]{\prod^{y}_{R_i>R_A}(E_{Ai}-S_{Ai})}$
 
 
 
-由于$(S_{Ai}-E_{Ai})$并不是全为正数，因此通过分别计算对应的值做差为 $P_A$。
+由于$(S_{A_i}-E_{A_i})$并不是全为正数，因此通过分别计算对应的值做差为 $P_A$。
 
 #### 2.3.3  rating 修正调整
 第一次：
@@ -124,7 +112,7 @@ $adjust=min(max(\frac{-1-\sum K_i*P_i}{m},-10),0)$
 $R_i=R_i+adjust~~~~(i \leq m)$
 
 ## 3. 后记
-本文参考了$codeforce，atcoder，Elo~rating~system$ 的 $rating$ 规则，以周期统计数据替代比赛场景，并根据应用场景进行修改，目前未进行样本测试。
+本文参考了codeforce，atcoder，Elo rating system$ 的 $rating​ 规则，以周期统计数据替代比赛场景，并根据应用场景进行修改，目前未进行样本测试。
 
 可能测试后，还会对参数以及公式大改QAQ
 
