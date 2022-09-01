@@ -25,3 +25,34 @@ var (
 func BuildKeyWithLastSiteID(last, site, id string) string {
 	return fmt.Sprintf("%v %v_%v", last, site, id)
 }
+
+//----------------------------------基本数学公式及存储结构体-------------------------------------------------
+
+type KV struct {
+	uerId  string
+	rating int
+}
+
+type userRating []KV
+
+func (ur userRating) Len() int { return len(ur) }
+
+func (ur userRating) Swap(i, j int) { ur[i], ur[j] = ur[j], ur[i] }
+
+func (ur userRating) Less(i, j int) bool {
+	return ur[i].rating > ur[j].rating
+}
+
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+func Max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}

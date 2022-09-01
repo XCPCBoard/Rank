@@ -3,10 +3,11 @@ package sort
 import (
 	"XCPCBoard/utils/keys"
 	"math"
+	"sort"
 )
 
 //userid 用户主键
-//siteid 网站id
+//siteId 网站id
 
 //--------------------------------基础rating--------------------------------------------
 
@@ -136,13 +137,13 @@ func countPa(upSum float64, downSum float64, upNum int, downNum int) float64 {
 	return Pa
 }
 
-func countAllRating(last, userid string) int {
+func countAllAddRating(last, userid string) int {
 	upSum := 1.0   //(S_Ai-E_Ai)大于0的乘积
 	upNum := 0     //计数，用于求几何平均数
 	downSum := 1.0 //(S_Ai-E_Ai)小于0的乘积
 	downNum := 0   //计数，用于求几何平均数
 	//用户上一个周期 gxU_rating
-	RSelf := getLastKindIDData(last, GxuRatingKey, userid)
+	//RSelf := getLastKindIDData(last, GxuRatingKey, userid)
 	// 计算 1Vn 时的P_A，也是1V1的几何平均数
 	for _, rival := range usersIDTable {
 		if userid == rival {
@@ -160,5 +161,47 @@ func countAllRating(last, userid string) int {
 	}
 	pa := countPa(upSum, downSum, upNum, downNum)
 	gxuRatingNew := int(math.Ceil(float64(K)*pa) - 0.5)
-	return gxuRatingNew + RSelf
+	return gxuRatingNew
+}
+
+//--------------------------------rating数据修正----------------------------------------
+
+//countAdjust 调整量公式
+func countAdjust(RSum int) int {
+	adjust := int((-1.0 - float64(K*RSum)) / float64(len(usersIDTable)))
+	return adjust
+}
+
+// firstCorrectRating 第一次修正
+func firstCorrectRating(last string) userRating {
+	usersAddRating := make([]KV, 0)
+	RSum := 0
+	for _, user := range usersIDTable {
+		addRating := countAllAddRating(last, user)
+		RSum = RSum + addRating
+
+		usersAddRating = append(usersAddRating, KV{user, addRating})
+	}
+	adjust := countAdjust(RSum)
+	for i, _ := range usersAddRating {
+		usersAddRating[i].rating = usersAddRating[i].rating + adjust
+	}
+	return usersAddRating
+}
+
+// secondCorrectRating 第二次修正
+func secondCorrectRating(last string) userRating {
+	usersAddRating := firstCorrectRating(last)
+	sort.Sort(userRating(usersAddRating))
+	L := len(usersAddRating)
+	n := Min(L, 4*int(math.Sqrt(float64(L))))
+	RSum := 0
+	for i := 0; i < n; i++ {
+		RSum = RSum + usersAddRating[i].rating
+	}
+	adjust := Min(Max(countAdjust(RSum), -10), 0)
+	for i := 0; i < n; i++ {
+		usersAddRating[i].rating = usersAddRating[i].rating + adjust
+	}
+	return usersAddRating
 }
