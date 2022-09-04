@@ -39,3 +39,8 @@ func GetRedisData(key string) (interface{}, error) {
 	}
 	return val, nil
 }
+
+// UpdateRedis 更新redisRating
+func UpdateRedis(key string, val int) {
+
+}

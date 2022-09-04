@@ -3,6 +3,7 @@ package sort
 import (
 	"XCPCBoard/utils/keys"
 	"math"
+	"rank/dao"
 	"sort"
 )
 
@@ -204,4 +205,15 @@ func secondCorrectRating(last string) userRating {
 		usersAddRating[i].rating = usersAddRating[i].rating + adjust
 	}
 	return usersAddRating
+}
+
+//-----------------------------------------------------------------------------
+
+// Flush 周期更新Gxu_rating
+func Flush(last string){
+	usersAddRating:=secondCorrectRating(last)
+	for _,user:=range usersAddRating{
+		rating:=getLastKindIDData(last,GxuRatingKey,user.uerId)
+		dao.UpdateRedis(BuildKeyWithLastSiteID(last,GxuRatingKey,user.uerId),rating+user.rating)
+	}
 }
