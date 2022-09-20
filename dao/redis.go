@@ -29,7 +29,7 @@ func NewRedisClient() (*redis.Client, error) {
 	return redisClient, nil
 }
 
-//GetRedisData 读取redis数据
+//GetRedisData 读取redis数据，查
 func GetRedisData(key string) (interface{}, error) {
 	//读取
 	val, err := RedisClient.Get(context.Background(), key).Result()
@@ -40,7 +40,8 @@ func GetRedisData(key string) (interface{}, error) {
 	return val, nil
 }
 
-// UpdateRedis 更新redisRating
-func UpdateRedis(key string, val int) {
-
+// AddRedis 更新redisRating，增
+func AddRedis(key string, val int) error {
+	
+	return nil
 }

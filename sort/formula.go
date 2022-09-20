@@ -180,7 +180,6 @@ func firstCorrectRating(last string) userRating {
 	for _, user := range usersIDTable {
 		addRating := countAllAddRating(last, user)
 		RSum = RSum + addRating
-
 		usersAddRating = append(usersAddRating, KV{user, addRating})
 	}
 	adjust := countAdjust(RSum)
@@ -210,10 +209,10 @@ func secondCorrectRating(last string) userRating {
 //-----------------------------------------------------------------------------
 
 // Flush 周期更新Gxu_rating
-func Flush(last string){
-	usersAddRating:=secondCorrectRating(last)
-	for _,user:=range usersAddRating{
-		rating:=getLastKindIDData(last,GxuRatingKey,user.uerId)
-		dao.UpdateRedis(BuildKeyWithLastSiteID(last,GxuRatingKey,user.uerId),rating+user.rating)
+func Flush(last string) {
+	usersAddRating := secondCorrectRating(last)
+	for _, user := range usersAddRating {
+		rating := getLastKindIDData(last, GxuRatingKey, user.uerId)
+		dao.UpdateRedis(BuildKeyWithLastSiteID(last, GxuRatingKey, user.uerId), rating+user.rating)
 	}
 }
