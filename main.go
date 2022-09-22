@@ -1,12 +1,16 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
 	"rank/dao"
+	"rank/server"
 )
 
 // 主入口函数
 func main() {
-
+	r := gin.Default()
+	r.POST("/Board", server.UpdateRating)
+	r.Run()
 }
 
 func init() {

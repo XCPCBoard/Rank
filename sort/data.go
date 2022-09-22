@@ -2,6 +2,7 @@ package sort
 
 import (
 	"XCPCBoard/utils/keys"
+	"context"
 	log "github.com/sirupsen/logrus"
 	"rank/dao"
 )
@@ -56,6 +57,16 @@ func getLastKindIDData(last, kind, id string) int {
 		log.Errorf("get %s %s %s Error: type is wrong", last, kind, id)
 	}
 	return num
+}
+
+//getLastRating 获取原rating
+func getLastRating(last, id string) float64 {
+	val := dao.RedisClient.ZScore(context.Background(), last+"rating", id).Val()
+	err := dao.RedisClient.ZScore(context.Background(), last+"rating", id).Err()
+	if err != nil {
+		log.Errorf("get %s %s rating Error: type is wrong", last, id)
+	}
+	return val
 }
 
 //getBlogData 读取db中Blog data 未知db_key

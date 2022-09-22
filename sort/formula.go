@@ -124,7 +124,7 @@ func getSaScore(last, selfId, rivalId string) float64 {
 // countOle OLE公式计算预测胜率
 func countOle(last, user, rival string) float64 {
 	//用户上一个周期 gxU_rating
-	RSelf := getLastKindIDData(last, GxuRatingKey, user)
+	RSelf := getLastRating(last, user)
 	//对手上一个周期 gxU_rating
 	RRival := getLastKindIDData(last, GxuRatingKey, rival)
 	res := 1.0 / (1.0 + math.Pow(10.0, (float64(RRival)-float64(RSelf))/400.0))
@@ -213,7 +213,9 @@ func secondCorrectRating(last string) userRating {
 //-----------------------------------------------------------------------------
 
 // Flush 周期更新Gxu_rating
-func Flush(last string) {
+func Flush() {
+	//更新周期待定
+	last := ""
 	usersAddRating := secondCorrectRating(last)
 	for _, user := range usersAddRating {
 		dao.UpdateRedis(user.uerId, user.rating)
