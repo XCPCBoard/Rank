@@ -13,7 +13,7 @@ import (
 //--------------------------------基础rating--------------------------------------------
 
 //getBaseRating 获取基础rating
-func getBaseRating(userid string) int {
+func getBaseRating(userid string) float64 {
 	// problem Sum part
 	problemScore := 0.0
 	for _, site := range OJ {
@@ -26,7 +26,7 @@ func getBaseRating(userid string) int {
 	//blog num part 未知blog_key及其存储方式
 	blogScore := 0.0
 	//四舍五入后强转
-	baseRating := int(math.Ceil(problemScore*0.5 + ratingScore*0.4 + blogScore*0.1 - 0.5))
+	baseRating := math.Ceil(problemScore*0.5 + ratingScore*0.4 + blogScore*0.1 - 0.5)
 	return baseRating
 }
 
@@ -47,7 +47,7 @@ func getProblemScore(last, userid string) float64 {
 }
 
 //getCodeforcesRatingScore cfRating 换算分值
-func getCodeforcesRatingScore(last, siteId string) int {
+func getCodeforcesRatingScore(last, siteId string) float64 {
 	lastCfRating := getLastSiteKindIdNum(last, keys.CodeforcesKey, keys.RatingKey, siteId)
 	//现在的rating值 key 不确定
 	nowCfRating := getLastSiteKindIdNum(keys.LastAll, keys.CodeforcesKey, keys.RatingKey, siteId)
@@ -59,12 +59,12 @@ func getCodeforcesRatingScore(last, siteId string) int {
 	if lastCfRating <= 600 {
 		return 1
 	}
-	cfRatingScore := int(math.Ceil(float64(lastCfRating)/400.0 + float64(lastCfRating*d)/20000.0 - 0.5))
+	cfRatingScore := math.Ceil(float64(lastCfRating)/400.0 + float64(lastCfRating*d)/20000.0 - 0.5)
 	return cfRatingScore
 }
 
-//getAtcoderRatingScore atcRating 换算分值
-func getAtcoderRatingScore(last, siteId string) int {
+//getAtCoderRatingScore atcRating 换算分值
+func getAtCoderRatingScore(last, siteId string) float64 {
 	lastAtcRating := getLastSiteKindIdNum(last, keys.AtCoderKey, keys.RatingKey, siteId)
 	//现在的rating值 key 不确定
 	nowAtcRating := getLastSiteKindIdNum(keys.LastAll, keys.AtCoderKey, keys.RatingKey, siteId)
@@ -82,13 +82,13 @@ func getAtcoderRatingScore(last, siteId string) int {
 	} else {
 		p = 50.0
 	}
-	atcRatingScore := int(math.Ceil(float64(lastAtcRating)*(1.0+float64(d)/p) - 0.5))
+	atcRatingScore := math.Ceil(float64(lastAtcRating)*(1.0+float64(d)/p) - 0.5)
 	return atcRatingScore
 }
 
 //getAllRatingScore Rating Score part
 func getAllRatingScore(last, userid string) float64 {
-	return float64(getAtcoderRatingScore(last, getSiteId(keys.AtCoderKey, userid)) +
+	return float64(getAtCoderRatingScore(last, getSiteId(keys.AtCoderKey, userid)) +
 		getCodeforcesRatingScore(last, getSiteId(keys.CodeforcesKey, userid)))
 }
 
@@ -138,7 +138,7 @@ func countPa(upSum float64, downSum float64, upNum int, downNum int) float64 {
 	return Pa
 }
 
-func countAllAddRating(last, userid string) int {
+func countAllAddRating(last, userid string) float64 {
 	upSum := 1.0   //(S_Ai-E_Ai)大于0的乘积
 	upNum := 0     //计数，用于求几何平均数
 	downSum := 1.0 //(S_Ai-E_Ai)小于0的乘积
@@ -161,22 +161,22 @@ func countAllAddRating(last, userid string) int {
 		}
 	}
 	pa := countPa(upSum, downSum, upNum, downNum)
-	gxuRatingNew := int(math.Ceil(float64(K)*pa) - 0.5)
+	gxuRatingNew := math.Ceil(float64(K)*pa) - 0.5
 	return gxuRatingNew
 }
 
 //--------------------------------rating数据修正----------------------------------------
 
 //countAdjust 调整量公式
-func countAdjust(RSum int) int {
-	adjust := int((-1.0 - float64(K*RSum)) / float64(len(usersIDTable)))
+func countAdjust(RSum float64) float64 {
+	adjust := (-1.0 - float64(K*RSum)) / float64(len(usersIDTable))
 	return adjust
 }
 
 // firstCorrectRating 第一次修正
 func firstCorrectRating(last string) userRating {
 	usersAddRating := make([]KV, 0)
-	RSum := 0
+	RSum := 0.0
 	for _, user := range usersIDTable {
 		addRating := countAllAddRating(last, user)
 		RSum = RSum + addRating
@@ -194,12 +194,16 @@ func secondCorrectRating(last string) userRating {
 	usersAddRating := firstCorrectRating(last)
 	sort.Sort(userRating(usersAddRating))
 	L := len(usersAddRating)
-	n := Min(L, 4*int(math.Sqrt(float64(L))))
-	RSum := 0
+	n := L
+	if 4*int(math.Sqrt(float64(L))) < L {
+		n = 4 * int(math.Sqrt(float64(L)))
+	}
+
+	RSum := 0.0
 	for i := 0; i < n; i++ {
 		RSum = RSum + usersAddRating[i].rating
 	}
-	adjust := Min(Max(countAdjust(RSum), -10), 0)
+	adjust := Min(Max(countAdjust(RSum), -10.0), 0.0)
 	for i := 0; i < n; i++ {
 		usersAddRating[i].rating = usersAddRating[i].rating + adjust
 	}
@@ -212,7 +216,6 @@ func secondCorrectRating(last string) userRating {
 func Flush(last string) {
 	usersAddRating := secondCorrectRating(last)
 	for _, user := range usersAddRating {
-		rating := getLastKindIDData(last, GxuRatingKey, user.uerId)
-		dao.UpdateRedis(BuildKeyWithLastSiteID(last, GxuRatingKey, user.uerId), rating+user.rating)
+		dao.UpdateRedis(user.uerId, user.rating)
 	}
 }

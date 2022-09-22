@@ -30,7 +30,7 @@ func BuildKeyWithLastSiteID(last, site, id string) string {
 
 type KV struct {
 	uerId  string
-	rating int
+	rating float64
 }
 
 type userRating []KV
@@ -43,14 +43,14 @@ func (ur userRating) Less(i, j int) bool {
 	return ur[i].rating > ur[j].rating
 }
 
-func Min(x, y int) int {
+func Min(x, y float64) float64 {
 	if x < y {
 		return x
 	}
 	return y
 }
 
-func Max(x, y int) int {
+func Max(x, y float64) float64 {
 	if x > y {
 		return x
 	}

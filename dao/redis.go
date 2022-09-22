@@ -40,8 +40,23 @@ func GetRedisData(key string) (interface{}, error) {
 	return val, nil
 }
 
-// AddRedis 更新redisRating，增
-func AddRedis(key string, val int) error {
-	
+// AddRedisData 添加redisRating,增
+func AddRedisData(key string, val float64) error {
+	RedisClient.ZAdd(context.Background(), "rating", &redis.Z{
+		Member: key,
+		Score:  val,
+	})
+	return nil
+}
+
+// UpdateRedis 更新redisRating，改
+func UpdateRedis(key string, val float64) error {
+	RedisClient.ZIncrBy(context.Background(), "rating", val, key)
+	return nil
+}
+
+//DeleteRedisData 删除redisRating,删
+func DeleteRedisData(key string) error {
+	RedisClient.ZRem(context.Background(), "rating", key)
 	return nil
 }
