@@ -23,7 +23,7 @@ var (
 
 // BuildKeyWithLastSiteID 时效_类型_用户id
 func BuildKeyWithLastSiteID(last, site, id string) string {
-	return fmt.Sprintf("%v %v_%v", last, site, id)
+	return fmt.Sprintf("%v_%v_%v", last, site, id)
 }
 
 //----------------------------------基本数学公式及存储结构体-------------------------------------------------
